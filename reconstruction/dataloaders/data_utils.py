@@ -1,6 +1,7 @@
 import os
 from torchvision import transforms
 
+BASE_PATH = 'Users/jason/OneDrive/Documents/Programming/McMaster Research/MedIAnomaly/data'
 
 def get_transform(opt):
     normalize = transforms.Normalize((0.5,), (0.5,)) if opt.model['in_c'] == 1 else \
@@ -12,7 +13,7 @@ def get_transform(opt):
 
 
 def get_data_path(dataset):
-    data_root = os.path.join(os.path.expanduser("~"), "MedIAnomaly-Data")
+    data_root = os.path.join(os.path.expanduser("~"), BASE_PATH)
     if dataset == 'rsna':
         return os.path.join(data_root, "RSNA")
     elif dataset == 'vin':
@@ -35,3 +36,5 @@ def get_data_path(dataset):
         return os.path.join(data_root, "CP-CHILD/CP-CHILD-A")
     else:
         raise Exception("Invalid dataset: {}".format(dataset))
+
+get_data_path('test')
