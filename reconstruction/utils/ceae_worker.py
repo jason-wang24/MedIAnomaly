@@ -12,7 +12,7 @@ class CeAEWorker(AEWorker):
         for idx_batch, data_batch in enumerate(self.train_loader):
             img, img_masked = data_batch['img'], data_batch['img_masked']
 
-            img, img_masked = img.cuda(), img_masked.cuda()
+            img, img_masked = img.to(self.device), img_masked.to(self.device)
 
             net_out = self.net(img_masked)
 

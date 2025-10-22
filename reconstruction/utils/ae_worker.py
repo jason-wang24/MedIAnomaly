@@ -24,7 +24,7 @@ class AEWorker(BaseWorker):
         losses = AverageMeter()
         for idx_batch, data_batch in enumerate(self.train_loader):
             img = data_batch['img']
-            img = img.cuda()
+            img = img.to(self.device)
 
             net_out = self.net(img)
 
@@ -44,7 +44,7 @@ class AEWorker(BaseWorker):
         with torch.no_grad():
             for idx_batch, data_batch in enumerate(self.train_loader):
                 img = data_batch['img']
-                img = img.cuda()
+                img = img.to(self.device)
 
                 net_out = self.net(img)
                 z = net_out['z']
@@ -52,7 +52,7 @@ class AEWorker(BaseWorker):
 
             for idx_batch, data_batch in enumerate(self.test_loader):
                 img, label = data_batch['img'], data_batch['label']
-                img = img.cuda()
+                img = img.to(self.device)
 
                 net_out = self.net(img)
                 z = net_out['z']
@@ -87,7 +87,7 @@ class AEWorker(BaseWorker):
         for idx_batch, data_batch in enumerate(self.test_loader):
             # test batch_size=1
             img, label, name = data_batch['img'], data_batch['label'], data_batch['name']
-            img = img.cuda()
+            img = img.to(self.device)
             img.requires_grad = self.grad_flag  # Will be True for gradient-based methods
 
             net_out = self.net(img)

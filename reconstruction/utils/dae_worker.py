@@ -18,7 +18,7 @@ class DAEWorker(AEWorker):
         losses = AverageMeter()
         for idx_batch, data_batch in enumerate(self.train_loader):
             img = data_batch['img']
-            img = img.cuda()
+            img = img.to(self.device)
             noisy_img, noise_tensor = self.add_noise(img)
 
             net_out = self.net(noisy_img)
@@ -39,7 +39,7 @@ class DAEWorker(AEWorker):
         # input N x C x H x W
         # to apply it in for rgb maybe not take diff noise for each channel? (input.shape[1] should be 1)
         ns = torch.normal(mean=torch.zeros(x.shape[0], x.shape[1], self.noise_res, self.noise_res),
-                          std=self.noise_std).cuda()
+                          std=self.noise_std).to(self.device)
 
         ns = F.interpolate(ns, size=self.opt.model['input_size'], mode='bilinear', align_corners=True)
 

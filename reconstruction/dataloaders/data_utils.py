@@ -1,7 +1,8 @@
 import os
 from torchvision import transforms
 
-BASE_PATH = 'Users/jason/OneDrive/Documents/Programming/McMaster Research/MedIAnomaly/data'
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+BASE_PATH = os.path.join(PROJECT_ROOT, 'data')
 
 def get_transform(opt):
     normalize = transforms.Normalize((0.5,), (0.5,)) if opt.model['in_c'] == 1 else \
@@ -13,7 +14,7 @@ def get_transform(opt):
 
 
 def get_data_path(dataset):
-    data_root = os.path.join(os.path.expanduser("~"), BASE_PATH)
+    data_root = BASE_PATH
     if dataset == 'rsna':
         return os.path.join(data_root, "RSNA")
     elif dataset == 'vin':
@@ -27,14 +28,12 @@ def get_data_path(dataset):
     elif dataset == 'c16':
         return os.path.join(data_root, "Camelyon16")
     elif dataset == 'oct':
-        return os.path.join(os.path.expanduser("~"), "datasets", "OCT2017")
+        return os.path.join(data_root, "OCT2017")
     elif dataset == 'colon':
-        return os.path.join(os.path.expanduser("~"), "datasets", "Colon_AD_public")
+        return os.path.join(data_root, "Colon_AD_public")
     elif dataset == 'isic':
         return os.path.join(data_root, "ISIC2018_Task3")
     elif dataset == 'cpchild':
-        return os.path.join(data_root, "CP-CHILD/CP-CHILD-A")
+        return os.path.join(data_root, "CP-CHILD", "CP-CHILD-A")
     else:
         raise Exception("Invalid dataset: {}".format(dataset))
-
-get_data_path('test')

@@ -27,7 +27,7 @@ class GanomalyWorker(BaseWorker):
 
         for idx_batch, data_batch in enumerate(self.train_loader):
             img = data_batch['img']
-            img = img.cuda()
+            img = img.to(self.device)
 
             net_out = self.net(img, test=False)
 
@@ -97,7 +97,7 @@ class GanomalyWorker(BaseWorker):
             for idx_batch, data_batch in enumerate(self.test_loader):
                 # test batch_size=1
                 img, label, name = data_batch['img'], data_batch['label'], data_batch['name']
-                img = img.cuda()
+                img = img.to(self.device)
 
                 net_out = self.net(img)
 

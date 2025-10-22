@@ -13,7 +13,7 @@ class AEUWorker(AEWorker):
         losses, recon_losses, log_vars = AverageMeter(), AverageMeter(), AverageMeter()
         for idx_batch, data_batch in enumerate(self.train_loader):
             img = data_batch['img']
-            img = img.cuda()
+            img = img.to(self.device)
 
             net_out = self.net(img)
 

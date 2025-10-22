@@ -35,10 +35,18 @@ class BaseWorker:
 
         self.net = None
         self.criterion = None
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    def to_device(self, tensor):
+        """Move tensor to the appropriate device (GPU or CPU)"""
+        return tensor.to(self.device)
 
     def set_gpu_device(self):
-        torch.cuda.set_device(self.opt.gpu)
-        print("=> Set GPU device: {}".format(self.opt.gpu))
+        if torch.cuda.is_available():
+            torch.cuda.set_device(self.opt.gpu)
+            print("=> Set GPU device: {}".format(self.opt.gpu))
+        else:
+            print("=> CUDA not available, using CPU")
 
     def set_seed(self):
         self.seed = self.opt.train['seed']
@@ -124,7 +132,9 @@ class BaseWorker:
             self.criterion = AELoss()
         else:
             raise NotImplementedError("Unexpected model name: {}".format(self.opt.model['name']))
-        self.net = self.net.cuda()
+        
+        # Move network to the appropriate device (GPU or CPU)
+        self.net = self.net.to(self.device)
 
     def set_optimizer(self):
         self.optimizer = torch.optim.Adam(self.net.parameters(), self.opt.train['lr'],
@@ -194,7 +204,8 @@ class BaseWorker:
 
     def set_logging(self, test=False):
         example_in = torch.zeros((1, self.opt.model["in_c"],
-                                  self.opt.model['input_size'], self.opt.model['input_size'])).cuda()
+                                  self.opt.model['input_size'], self.opt.model['input_size']))
+        example_in = example_in.to(self.device)
 
         # flops, params = profile(self.net, inputs=(example_in,))
         flops, params = profile(copy.deepcopy(self.net), inputs=(example_in,))
@@ -273,7 +284,7 @@ class BaseWorker:
 
     def load_checkpoint(self):
         model_path = os.path.join(self.opt.train['save_dir'], "checkpoints", "model.pt")
-        self.net.load_state_dict(torch.load(model_path, map_location=torch.device("cuda:{}".format(self.opt.gpu))))
+        self.net.load_state_dict(torch.load(model_path, map_location=torch.device("cuda:{}".format(self.opt.gpu) if torch.cuda.is_available() else "cpu")))
         print("=> Load model from {}".format(model_path))
 
     def run_eval(self):
