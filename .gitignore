@@ -4,8 +4,9 @@
 # Python env
 /testenv/
 
-# Experiment tracking
+# Experiment tracking and results
 wandb/
+/experiments/
 
 # Python cache files
 __pycache__/
